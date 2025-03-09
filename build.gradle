@@ -20,7 +20,7 @@ apply plugin: "maven-publish"
 
 
 import groovy.json.JsonSlurper
-
+/*
 def secretFile = file "secret.json"
 def secret = null
 if (secretFile.exists()) {
@@ -28,7 +28,7 @@ if (secretFile.exists()) {
     secret = new JsonSlurper().parse it
   }
 }
-
+*/
 version = "1.0.11-1.12.2"
 group = "net.ilexiconn"
 archivesBaseName = "llibrary-core"
@@ -54,6 +54,11 @@ jar {
   }
 }
 
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
 task sourcesJar(type: Jar, dependsOn: classes) {
   classifier = "sources"
   from sourceSets.main.allSource
@@ -63,7 +68,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   classifier = "javadoc"
   from javadoc.getDestinationDir()
 }
-
+/*
 task signJar(type: SignJar, dependsOn: reobfJar) {
   if (secret) {
     keyStore = secret.keyStore
@@ -76,12 +81,13 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
 }
 
 build.dependsOn signJar
-
+*/
 artifacts {
   archives sourcesJar
   archives javadocJar
+  archives deobfJar
 }
-
+/*
 publishing {
   publications {
     mavenJava(MavenPublication) {
@@ -106,7 +112,7 @@ publishing {
     }
   }
 }
-
+*/
 task generateMappings {
   def mappingParts = minecraft_mappings.split("_")
   def inputFile = new File("${System.properties["user.home"]}/.gradle/caches/minecraft/de/oceanlabs/mcp/mcp_${mappingParts[0]}/${mappingParts[1]}/${project.minecraft.version}/srgs/mcp-srg.srg")
